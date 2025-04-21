@@ -11,93 +11,99 @@ int main() {
         }
     }
 
-    int navio[3] = {3, 3, 3}; // Todos os navios são iguais
-    int sucesso = 1;
+    // Simulando navio
+    tabuleiro[2][2] = 3;
+    tabuleiro[2][3] = 3;
+    tabuleiro[2][4] = 3;
 
-    // ---- NAVIO 1: horizontal (linha 1, coluna 2 até 4) ----
-    int linha1 = 1, coluna1 = 2;
-    if (coluna1 + 3 <= 10) {
-        for (i = 0; i < 3; i++) {
-            if (tabuleiro[linha1][coluna1 + i] != 0) sucesso = 0;
-        }
-        if (sucesso) {
-            for (i = 0; i < 3; i++) {
-                tabuleiro[linha1][coluna1 + i] = navio[i];
+    // --------- MATRIZES DE HABILIDADES (5x5) ---------
+    int cone[5][5];
+    int cruz[5][5];
+    int octaedro[5][5];
+
+    // CONE para baixo (triângulo apontando pra baixo)
+    for (i = 0; i < 5; i++) {
+        for (j = 0; j < 5; j++) {
+            if (i >= j - 2 && i >= 2 - j) { // forma do cone
+                cone[i][j] = 1;
+            } else {
+                cone[i][j] = 0;
             }
-        } else {
-            printf("Erro: sobreposição no navio 1.\n");
-            return 1;
         }
-    } else {
-        printf("Erro: navio 1 fora do tabuleiro.\n");
-        return 1;
     }
 
-    sucesso = 1;
-
-    // ---- NAVIO 2: vertical (linha 5 até 7, coluna 8) ----
-    int linha2 = 5, coluna2 = 8;
-    if (linha2 + 3 <= 10) {
-        for (i = 0; i < 3; i++) {
-            if (tabuleiro[linha2 + i][coluna2] != 0) sucesso = 0;
-        }
-        if (sucesso) {
-            for (i = 0; i < 3; i++) {
-                tabuleiro[linha2 + i][coluna2] = navio[i];
+    // CRUZ (linha e coluna centrais)
+    for (i = 0; i < 5; i++) {
+        for (j = 0; j < 5; j++) {
+            if (i == 2 || j == 2) {
+                cruz[i][j] = 1;
+            } else {
+                cruz[i][j] = 0;
             }
-        } else {
-            printf("Erro: sobreposição no navio 2.\n");
-            return 1;
         }
-    } else {
-        printf("Erro: navio 2 fora do tabuleiro.\n");
-        return 1;
     }
 
-    sucesso = 1;
-
-    // ---- NAVIO 3: diagonal ↘ (linha 0, coluna 0 até 2) ----
-    int linha3 = 0, coluna3 = 0;
-    if (linha3 + 3 <= 10 && coluna3 + 3 <= 10) {
-        for (i = 0; i < 3; i++) {
-            if (tabuleiro[linha3 + i][coluna3 + i] != 0) sucesso = 0;
-        }
-        if (sucesso) {
-            for (i = 0; i < 3; i++) {
-                tabuleiro[linha3 + i][coluna3 + i] = navio[i];
+    // OCTAEDRO (forma de losango)
+    for (i = 0; i < 5; i++) {
+        for (j = 0; j < 5; j++) {
+            if (abs(i - 2) + abs(j - 2) <= 2) {
+                octaedro[i][j] = 1;
+            } else {
+                octaedro[i][j] = 0;
             }
-        } else {
-            printf("Erro: sobreposição no navio 3.\n");
-            return 1;
         }
-    } else {
-        printf("Erro: navio 3 fora do tabuleiro.\n");
-        return 1;
     }
 
-    sucesso = 1;
+    // --------- SOBREPOR HABILIDADES NO TABULEIRO ---------
+    // Centro para aplicar habilidades
+    int centro_linha = 4;
+    int centro_coluna = 4;
 
-    // ---- NAVIO 4: diagonal ↙ (linha 2, coluna 7 até 5) ----
-    int linha4 = 2, coluna4 = 7;
-    if (linha4 + 3 <= 10 && coluna4 - 2 >= 0) {
-        for (i = 0; i < 3; i++) {
-            if (tabuleiro[linha4 + i][coluna4 - i] != 0) sucesso = 0;
-        }
-        if (sucesso) {
-            for (i = 0; i < 3; i++) {
-                tabuleiro[linha4 + i][coluna4 - i] = navio[i];
+    // Aplique o CONE
+    for (i = 0; i < 5; i++) {
+        for (j = 0; j < 5; j++) {
+            int tab_i = centro_linha - 2 + i;
+            int tab_j = centro_coluna - 2 + j;
+
+            if (tab_i >= 0 && tab_i < 10 && tab_j >= 0 && tab_j < 10) {
+                if (cone[i][j] == 1 && tabuleiro[tab_i][tab_j] == 0) {
+                    tabuleiro[tab_i][tab_j] = 5; // habilidade visual
+                }
             }
-        } else {
-            printf("Erro: sobreposição no navio 4.\n");
-            return 1;
         }
-    } else {
-        printf("Erro: navio 4 fora do tabuleiro.\n");
-        return 1;
     }
 
-    // ---- EXIBE O TABULEIRO ----
-    printf("\nTabuleiro:\n\n");
+    // Aplique a CRUZ
+    for (i = 0; i < 5; i++) {
+        for (j = 0; j < 5; j++) {
+            int tab_i = centro_linha - 2 + i;
+            int tab_j = centro_coluna - 2 + j;
+
+            if (tab_i >= 0 && tab_i < 10 && tab_j >= 0 && tab_j < 10) {
+                if (cruz[i][j] == 1 && tabuleiro[tab_i][tab_j] == 0) {
+                    tabuleiro[tab_i][tab_j] = 5;
+                }
+            }
+        }
+    }
+
+    // Aplique o OCTAEDRO
+    for (i = 0; i < 5; i++) {
+        for (j = 0; j < 5; j++) {
+            int tab_i = centro_linha - 2 + i;
+            int tab_j = centro_coluna - 2 + j;
+
+            if (tab_i >= 0 && tab_i < 10 && tab_j >= 0 && tab_j < 10) {
+                if (octaedro[i][j] == 1 && tabuleiro[tab_i][tab_j] == 0) {
+                    tabuleiro[tab_i][tab_j] = 5;
+                }
+            }
+        }
+    }
+
+    // --------- EXIBIR TABULEIRO FINAL ---------
+    printf("\nLegenda: 0 = água | 3 = navio | 5 = área de habilidade\n\n");
+
     for (i = 0; i < 10; i++) {
         for (j = 0; j < 10; j++) {
             printf("%d ", tabuleiro[i][j]);
