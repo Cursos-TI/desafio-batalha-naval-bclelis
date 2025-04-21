@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 int main() {
-    int tabuleiro[10][10]; // Matriz 10x10 representando o tabuleiro
+    int tabuleiro[10][10];
     int i, j;
 
     // Inicializa o tabuleiro com água (0)
@@ -11,47 +11,92 @@ int main() {
         }
     }
 
-    // Representação dos navios com vetor unidimensional
-    int navio_horizontal[3] = {3, 3, 3}; // Horizontal
-    int navio_vertical[3] = {3, 3, 3};   // Vertical
+    int navio[3] = {3, 3, 3}; // Todos os navios são iguais
+    int sucesso = 1;
 
-    // Coordenadas iniciais dos navios
-    int linha_h = 2, coluna_h = 4; // Navio horizontal começa na linha 2, coluna 4
-    int linha_v = 5, coluna_v = 7; // Navio vertical começa na linha 5, coluna 7
-
-    // Verifica se o navio horizontal cabe no tabuleiro
-    if (coluna_h + 3 <= 10) {
+    // ---- NAVIO 1: horizontal (linha 1, coluna 2 até 4) ----
+    int linha1 = 1, coluna1 = 2;
+    if (coluna1 + 3 <= 10) {
         for (i = 0; i < 3; i++) {
-            if (tabuleiro[linha_h][coluna_h + i] != 0) {
-                printf("Erro: sobreposição no navio horizontal.\n");
-                return 1;
-            }
+            if (tabuleiro[linha1][coluna1 + i] != 0) sucesso = 0;
         }
-        for (i = 0; i < 3; i++) {
-            tabuleiro[linha_h][coluna_h + i] = navio_horizontal[i];
+        if (sucesso) {
+            for (i = 0; i < 3; i++) {
+                tabuleiro[linha1][coluna1 + i] = navio[i];
+            }
+        } else {
+            printf("Erro: sobreposição no navio 1.\n");
+            return 1;
         }
     } else {
-        printf("Erro: navio horizontal fora do tabuleiro.\n");
+        printf("Erro: navio 1 fora do tabuleiro.\n");
         return 1;
     }
 
-    // Verifica se o navio vertical cabe no tabuleiro
-    if (linha_v + 3 <= 10) {
+    sucesso = 1;
+
+    // ---- NAVIO 2: vertical (linha 5 até 7, coluna 8) ----
+    int linha2 = 5, coluna2 = 8;
+    if (linha2 + 3 <= 10) {
         for (i = 0; i < 3; i++) {
-            if (tabuleiro[linha_v + i][coluna_v] != 0) {
-                printf("Erro: sobreposição no navio vertical.\n");
-                return 1;
-            }
+            if (tabuleiro[linha2 + i][coluna2] != 0) sucesso = 0;
         }
-        for (i = 0; i < 3; i++) {
-            tabuleiro[linha_v + i][coluna_v] = navio_vertical[i];
+        if (sucesso) {
+            for (i = 0; i < 3; i++) {
+                tabuleiro[linha2 + i][coluna2] = navio[i];
+            }
+        } else {
+            printf("Erro: sobreposição no navio 2.\n");
+            return 1;
         }
     } else {
-        printf("Erro: navio vertical fora do tabuleiro.\n");
+        printf("Erro: navio 2 fora do tabuleiro.\n");
         return 1;
     }
 
-    // Exibe o tabuleiro
+    sucesso = 1;
+
+    // ---- NAVIO 3: diagonal ↘ (linha 0, coluna 0 até 2) ----
+    int linha3 = 0, coluna3 = 0;
+    if (linha3 + 3 <= 10 && coluna3 + 3 <= 10) {
+        for (i = 0; i < 3; i++) {
+            if (tabuleiro[linha3 + i][coluna3 + i] != 0) sucesso = 0;
+        }
+        if (sucesso) {
+            for (i = 0; i < 3; i++) {
+                tabuleiro[linha3 + i][coluna3 + i] = navio[i];
+            }
+        } else {
+            printf("Erro: sobreposição no navio 3.\n");
+            return 1;
+        }
+    } else {
+        printf("Erro: navio 3 fora do tabuleiro.\n");
+        return 1;
+    }
+
+    sucesso = 1;
+
+    // ---- NAVIO 4: diagonal ↙ (linha 2, coluna 7 até 5) ----
+    int linha4 = 2, coluna4 = 7;
+    if (linha4 + 3 <= 10 && coluna4 - 2 >= 0) {
+        for (i = 0; i < 3; i++) {
+            if (tabuleiro[linha4 + i][coluna4 - i] != 0) sucesso = 0;
+        }
+        if (sucesso) {
+            for (i = 0; i < 3; i++) {
+                tabuleiro[linha4 + i][coluna4 - i] = navio[i];
+            }
+        } else {
+            printf("Erro: sobreposição no navio 4.\n");
+            return 1;
+        }
+    } else {
+        printf("Erro: navio 4 fora do tabuleiro.\n");
+        return 1;
+    }
+
+    // ---- EXIBE O TABULEIRO ----
     printf("\nTabuleiro:\n\n");
     for (i = 0; i < 10; i++) {
         for (j = 0; j < 10; j++) {
